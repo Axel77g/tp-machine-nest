@@ -76,14 +76,17 @@ export class AuthService{
         try {
             const payload = jwt.verify(token, process.env.JWT_SECRET || "secret");
             if(!payload || typeof payload !== 'object' || !('identifier' in payload) || !('email' in payload)) return false;
-            const user = await this.userRepository.findByIdentifier(payload.identifier);
+            const user = await this.userRepository.findByIdentifier({identifier: payload.identifier});
             if (!user) {
                 throw new UnauthorizedException();
             }
+            if(user.emailVerifiedAt) return false;
             const verifiedUser = UserEntity.verifyEmail(user);
+            console.log("User verified:", verifiedUser);
             this.userRepository.putUser(verifiedUser);
             return !!payload;
         } catch (error) {
+            console.error("Email verification failed:", error);
             return false;
         }
     }

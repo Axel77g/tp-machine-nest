@@ -17,14 +17,16 @@ export class MongoUserRepository implements IUserRepository {
 
     async findByIdentifier(identifier: UserIdentifier): Promise<User | null> {
         if (identifier.identifier) {
-            return this.userModel.find({
+            const response =  this.userModel.findOne({
                 identifier: identifier.identifier
             }).lean<User>().exec();
+            return response;
         }
         return null;
     }
 
     async putUser(user: User): Promise<User> {
+
         const updated = await this.userModel.findOneAndUpdate(
             { email: user.email },
             user,

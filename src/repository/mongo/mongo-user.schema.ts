@@ -48,7 +48,7 @@ export const UserSchema = new Schema({
     },
     films : [
         {
-           identifier:{
+            identifier:{
                 type: String,
                 required: true,
             },

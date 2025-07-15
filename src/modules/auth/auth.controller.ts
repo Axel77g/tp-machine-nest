@@ -87,10 +87,10 @@ export class AuthController {
     description: 'Email non vérifié',
     type: ErrorResponseDTO
   })
-  verifyEmail(@Query('t') token: string) {
-    const isVerified = this.userService.verifyEmail(token);
+  async verifyEmail(@Query('t') token: string) {
+    const isVerified = await this.userService.verifyEmail(token);
     if (!isVerified) {
-      throw new Error('Email non vérifié');
+      return { message: 'Email non vérifié' };
     }
     return { message: 'Email vérifié avec succès' };
 
